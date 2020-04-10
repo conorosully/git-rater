@@ -19,6 +19,27 @@ def str_to_int(string):
 #? scrape functions
 #?#################################################
 
+# def save_overview(home, tab):
+#     friends = {}
+#     page = 1
+#     while 1:
+#         flag = 1
+#         url = home
+#         if test_path(fix_path(url)):
+#             flag = 0
+#         if flag:
+#             html = requests.get(url)
+#             if not html:
+#                 print("invalid github link", home)
+#                 return
+#             bfsO = BeautifulSoup(html.text, "html.parser")
+#             users = bfsO.findAll("a", {"data-hovercard-type": "user"})
+#             if users:
+#                 html_to_file(url, html.text)
+#             else:
+#                 return
+#         page += 1
+
 # @param url: string leading to a user's overview page; "https://github.com/user_name"
 # @return counts: returns an array - #repos #projects #stars #followers #following
 def get_metrics(url):
@@ -34,43 +55,21 @@ def get_metrics(url):
         counts[i] = str_to_int(counts[i])
     return counts
 
-def get_friends(home):
-    friends = {}
-    page = 1
-    while 1:
-        url = home + "?page=" + str(page) + "&tab=followers"
-        html = requests.get(url)
-        if not html:
-            print("invalid github link")
-            return 
-        bfsO = BeautifulSoup(html.text, "html.parser")
-        users = bfsO.findAll("a", {"data-hovercard-type": "user"})
-        if not users:
-            return friends
-        for user in users:
-            href = user.get("href")
-            href = href[1:len(href)]
-            friends[href] = href
-
-        # for friend in friends:
-        #     print(friend)
-        page += 1
-
 
 #?#################################################
 #? main
 #?#################################################
 
 def main():
-    url = "https://github.com/m4d4rchy"
+    # url = "https://github.com/m4d4rchy"
     # url = "https://github.com/conorosully"
     # url = "https://github.com/fabpot"
-    
+    if len(sys.argv) < 1:
+        print("Invalid input\n<python3 untitled_scraper.py> <user_name>")
+        return
+    url = "https://github.com/" + sys.argv[1]
     counts = get_metrics(url)
     print(counts)
-    # # friends = get_friends(url)
-    # # for friend in friends:
-    #     print(friend)
 
 if __name__ == "__main__":
     main()
