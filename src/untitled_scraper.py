@@ -4,23 +4,9 @@ from bs4 import BeautifulSoup
 import requests
 import datetime
 
-def scrape_friends(url):
-    search = "?tab=followers"
-    html = requests.get(url + search)
-    if not html:
-        print("invalid github link")
-        return
-    bfsO = BeautifulSoup(html.text, "html.parser")
-    users = bfsO.findAll("a", {"data-hovercard-type": "user"})
-    
-    friends = {}
-    for user in users:
-        href = user.get("href")
-        href = href[1:len(href)]
-        friends[href] = href
-
-    for friend in friends:
-        print(friend)
+#?#################################################
+#? helper functions
+#?#################################################
 
 def str_to_int(string):
     if string.find("k") > 0:
@@ -28,7 +14,14 @@ def str_to_int(string):
         return int(float(string)*1000)
     return int(string)
 
-def get_repo_counts(url):
+
+#?#################################################
+#? scrape functions
+#?#################################################
+
+# @param url: string leading to a user's overview page; "https://github.com/user_name"
+# @return counts: returns an array - #repos #projects #stars #followers #following
+def get_metrics(url):
     html = requests.get(url)
     if not html:
         print("invalid github link")
@@ -41,8 +34,37 @@ def get_repo_counts(url):
         counts[i] = str_to_int(counts[i])
     return counts
 
-url = "https://github.com/conorosully"
-# url = "https://github.com/fabpot"
-# scrape_friends(url)
-counts = get_repo_counts(url)
-print(counts)
+def get_friends(home):
+    friends = {}
+    page = 1
+    while 1:
+        url = home + "?page=" + str(page) + "&tab=followers"
+        html = requests.get(url)
+        if not html:
+            print("invalid github link")
+            return 
+        bfsO = BeautifulSoup(html.text, "html.parser")
+        users = bfsO.findAll("a", {"data-hovercard-type": "user"})
+        if not users:
+            return friends
+        for user in users:
+            href = user.get("href")
+            href = href[1:len(href)]
+            friends[href] = href
+
+        # for friend in friends:
+        #     print(friend)
+        page += 1
+
+
+#?#################################################
+#? main
+#?#################################################
+# url = "https://github.com/conorosully"
+url = "https://github.com/fabpot"
+# counts = get_metrics(url)
+# url = "https://github.com/m4d4rchy"
+# print(counts)
+friends = get_friends(url)
+for friend in friends:
+    print(friend)
