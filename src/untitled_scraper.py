@@ -60,11 +60,17 @@ def get_friends(home):
 #?#################################################
 #? main
 #?#################################################
-# url = "https://github.com/conorosully"
-url = "https://github.com/fabpot"
-# counts = get_metrics(url)
-# url = "https://github.com/m4d4rchy"
-# print(counts)
-friends = get_friends(url)
-for friend in friends:
-    print(friend)
+
+def main():
+    url = "https://github.com/m4d4rchy"
+    # url = "https://github.com/conorosully"
+    # url = "https://github.com/fabpot"
+    
+    counts = get_metrics(url)
+    print(counts)
+    # # friends = get_friends(url)
+    # # for friend in friends:
+    #     print(friend)
+
+if __name__ == "__main__":
+    main()
