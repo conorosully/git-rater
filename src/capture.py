@@ -20,7 +20,7 @@ def print_struct(struct):
     following = struct["following"]
     repos = struct["repos"]
     con = struct["contributions"]
-    
+
     print("{{counts: array[%d]}}"%(len(counts)))
     for i in range(len(counts)):
         if i == 0:
@@ -54,7 +54,7 @@ def print_struct(struct):
         print(c)
 
 
-    
+
 
 
 
@@ -70,7 +70,7 @@ def test_path(path):
         open(path, "r")
     except IOError:
         return 0
-    return 1  
+    return 1
 
 def file_to_html(path):
     html = ""
@@ -176,7 +176,7 @@ def main():
     if len(sys.argv) < 1:
         print("Invalid input\n<python3 untitled_scraper.py> <user_name>")
         return
-    #! bs print    
+    #! bs print
     home = "https://github.com/" +  sys.argv[1]
     struct["counts"] = get_counts(home)
     struct["followers"] = get_friends(home, "followers")
