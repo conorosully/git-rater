@@ -61,9 +61,8 @@ def print_struct(struct):
 #?#################################################
 #? file functions
 #?#################################################
-
 def fix_path(path):
-    return "../html/" + path.replace("/","%fs%")
+    return sys.argv[2] + path.replace("/","%fs%")
 
 def test_path(path):
     try:
@@ -87,10 +86,11 @@ def file_to_html(path):
 
 # @param url: string leading to a user's overview page; "https://github.com/user_name"
 # @return counts: returns an array - #repos #projects #stars #followers #following
-def get_counts(url):
-    if not test_path(fix_path(url)):
+def get_counts():
+    home = "https://github.com/" +  sys.argv[1]
+    if not test_path(fix_path(home)):
         return None
-    html = file_to_html(fix_path(url))
+    html = file_to_html(fix_path(home))
     bfsO = BeautifulSoup(html, "html.parser")
     counts = bfsO.findAll("span", {"class": "Counter"})
     for i in range(len(counts)):
@@ -98,7 +98,8 @@ def get_counts(url):
         counts[i] = str_to_int(counts[i])
     return counts
 
-def get_friends(home, tab):
+def get_friends(tab):
+    home = "https://github.com/" +  sys.argv[1]
     friends = {}
     page = 1
     while 1:
@@ -119,12 +120,13 @@ def get_friends(home, tab):
         page += 1
     return friends
 
-def get_repos(home, tab):
+def get_repos():
+    home = "https://github.com/" +  sys.argv[1]
     repos = []
     titles = []
     langs = []
     dates = []
-    url = home + "?tab=" + tab
+    url = home + "?tab=" + "repositories"
     if not test_path(fix_path(url)):
         return repos
     html = file_to_html(fix_path(url))
@@ -143,7 +145,8 @@ def get_repos(home, tab):
         dates.append(x.text)
     return [titles, langs, dates]
 
-def get_contributions(home):
+def get_contributions():
+    home = "https://github.com/" +  sys.argv[1]
     data = []
     url = home
     if not test_path(fix_path(url)):
@@ -164,26 +167,26 @@ def get_contributions(home):
     return data
 
 
-#?#################################################
-#? main
-#?#################################################
+# #?#################################################
+# #? main
+# #?#################################################
 
-def main():
-    # url = "https://github.com/m4d4rchy"
-    # url = "https://github.com/conorosully"
-    # url = "https://github.com/fabpot"
-    struct = {}
-    if len(sys.argv) < 1:
-        print("Invalid input\n<python3 untitled_scraper.py> <user_name>")
-        return
-    #! bs print
-    home = "https://github.com/" +  sys.argv[1]
-    struct["counts"] = get_counts(home)
-    struct["followers"] = get_friends(home, "followers")
-    struct["following"] = get_friends(home, "following")
-    struct["repos"] = get_repos(home, "repositories")
-    struct["contributions"] = get_contributions(home)
-    print_struct(struct)
+# def main():
+#     # url = "https://github.com/m4d4rchy"
+#     # url = "https://github.com/conorosully"
+#     # url = "https://github.com/fabpot"
+#     struct = {}
+#     if len(sys.argv) < 1:
+#         print("Invalid input\n<python3 untitled_scraper.py> <user_name>")
+#         return
+#     #! bs print
+#     home = "https://github.com/" +  sys.argv[1]
+#     struct["counts"] = get_counts(home)
+#     struct["followers"] = get_friends(home, "followers")
+#     struct["following"] = get_friends(home, "following")
+#     struct["repos"] = get_repos(home, "repositories")
+#     struct["contributions"] = get_contributions(home)
+#     print_struct(struct)
 
-if __name__ == "__main__":
-    main()
+# if __name__ == "__main__":
+#     main()

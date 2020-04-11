@@ -14,7 +14,7 @@ import requests
 #?#################################################
 
 def fix_path(path):
-    return "../html/" + path.replace("/","%fs%")
+    return sys.argv[2] + path.replace("/","%fs%")
 
 def test_path(path):
     try:
@@ -88,6 +88,9 @@ def save_users(home, tab):
         page += 1
 
 def save_all():
+    if len(sys.argv) < 3:
+        print("Invalid input\n<python3 save.py> <user_name> <path_to_save_folder>")
+        return
     url = "https://github.com/" +  sys.argv[1]
     save_users(url, "followers")
     save_users(url, "following")
@@ -97,19 +100,19 @@ def save_all():
     save_other(url, "stars")
     save_overview(url)
 
-#?#################################################
-#? main
-#?#################################################
+# #?#################################################
+# #? main
+# #?#################################################
 
-def main():
-    # home = "https://github.com/m4d4rchy"
-    # home = "https://github.com/conorosully"
-    # home = "https://github.com/fabpot"
-    if len(sys.argv) < 2:
-        print("Invalid input\n<python3 friends.py> <user_name>")
-        return
+# def main():
+#     # home = "https://github.com/m4d4rchy"
+#     # home = "https://github.com/conorosully"
+#     # home = "https://github.com/fabpot"
+#     if len(sys.argv) < 3:
+#         print("Invalid input\n<python3 save.py> <user_name> <path_to_save_folder>")
+#         return
 
-    save_all()
+#     save_all()
 
-if __name__ == "__main__":
-    main()
+# if __name__ == "__main__":
+#     main()
