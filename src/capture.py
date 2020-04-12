@@ -58,10 +58,10 @@ def file_to_html(path):
 #* @return counts: returns an array - #repos #projects #stars #followers #following
 def get_counts(user, path):
     home = "https://github.com/" +  user
-    path += fix_url(home)
-    if not test_path(path):
+    file_name = path + fix_url(home)
+    if not test_path(file_name):
         return None
-    html = file_to_html(path)
+    html = file_to_html(file_name)
     bfsO = BeautifulSoup(html, "html.parser")
     counts = bfsO.findAll("span", {"class": "Counter"})
     for i in range(len(counts)):
@@ -78,10 +78,10 @@ def get_friends(user, path, tab):
     page = 1
     while 1:
         url = home + "?page=" + str(page) + "&tab=" + tab
-        path += fix_url(url)
-        if not test_path(path):
+        file_name = path + fix_url(url)
+        if not test_path(file_name):
             return friends
-        html = file_to_html(path)
+        html = file_to_html(file_name)
         bfsO = BeautifulSoup(html, "html.parser")
         users = bfsO.findAll("a", {"data-hovercard-type": "user"})
         if not users:
@@ -107,10 +107,10 @@ def get_repos(user, path):
     langs = []
     dates = []
     url = home + "?tab=" + "repositories"
-    path += fix_url(url)
-    if not test_path(path):
+    file_name = path + fix_url(url)
+    if not test_path(file_name):
         return repos
-    html = file_to_html(path)
+    html = file_to_html(file_name)
     bfsO = BeautifulSoup(html, "html.parser")
     user_list = bfsO.find("div", {"id": "user-repositories-list"})
     a = user_list.findAll("a")
@@ -130,10 +130,10 @@ def get_contributions(user, path):
     home = "https://github.com/" +  user
     data = []
     url = home
-    path += fix_url(url)
-    if not test_path(path):
+    file_name = path + fix_url(home)
+    if not test_path(file_name):
         return
-    html = file_to_html(path)
+    html = file_to_html(file_name)
     bfsO = BeautifulSoup(html, "html.parser")
     con = bfsO.find("div", {"class": "js-yearly-contributions"})
     rect = con.findAll("rect")
