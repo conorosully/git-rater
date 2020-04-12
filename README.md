@@ -5,6 +5,9 @@ A machine learning model that tries to predict the quality of your github profil
 ### Web Scrapper
 First download the html of a users profile: 
 ```python
+import save as sv #save html
+import capture as cp #obtain features
+
 user = "conorosully"
 path = "../data/test/"
 
