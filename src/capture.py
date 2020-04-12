@@ -53,11 +53,12 @@ def file_to_html(path):
 #? scrape functions
 #?#################################################
 
-#* @brief: returns an int array of the tab counts visible from overvief page
+#* @brief: returns an dic of the tab counts visible from overvief page
 #* @param(string) user: user's account name
 #* @param(string) path: folder path where the html will be saved: "../html/"
-#* @return counts: returns an array - #repos #projects #stars #followers #following
+#* @return counts: returns dic - #repos #projects #stars #followers #following
 def get_counts(user, path):
+    struct = {}
     home = "https://github.com/" +  user
     file_name = path + fix_url(home)
     if not test_path(file_name):
@@ -65,19 +66,22 @@ def get_counts(user, path):
     html = file_to_html(file_name)
     bfsO = BeautifulSoup(html, "html.parser")
     counts = bfsO.findAll("span", {"class": "Counter"})
-    for i in range(len(counts)):
-        counts[i] = counts[i].text.strip()
-        counts[i] = str_to_int(counts[i])
-    return counts
+    struct["repos"] = str_to_int(counts[0].text.strip())
+    struct["projects"] = str_to_int(counts[1].text.strip())
+    struct["stars"] = str_to_int(counts[2].text.strip())
+    struct["followers"] = str_to_int(counts[3].text.strip())
+    struct["following"] = str_to_int(counts[4].text.strip())
+    return struct
 
-#* @brief: returns a dictionary of all the users a user follows/following
+#* @brief: returns an array of all the users a user follows/following
 #* @param(string) user: user's account name
 #* @param(string) path: folder path where the html will be saved: "../html/"
 #* @param tab: which type of user to parse ["following", "followers"]
-#* @return friends: dictionary of all friends
+#* @return friends: array of all friends
 def get_friends(user, path, tab):
     home = "https://github.com/" +  user
-    friends = {}
+    friend_hash = {}
+    friends = []
     page = 1
     while 1:
         url = home + "?page=" + str(page) + "&tab=" + tab
@@ -92,29 +96,29 @@ def get_friends(user, path, tab):
         for user in users:
             href = user.get("href")
             href = href[1:len(href)]
-            friends[href] = href
-        for friend in friends:
-            (friend)
+            if not friend_hash.get(href, 0):
+                friend_hash[href] = href
+                friends.append(href)
         page += 1
     return friends
 
 #* @brief: get repo information from repositiories tab
 #* @param(string) user: user's account name
 #* @param(string) path: folder path where the html will be saved: "../html/"
-#* @return(array): returns an array nesting 3 arrays
-    #* @return(array[0]) returns list of titles of the repos
-    #* @return(array[1]) returns a list of lanauges of the repos (not in parallel with titles)
-    #* @return(array[2]) returns a list of when the repo was last modified (in parallel with titles)
+#* @return(dic): returns an dic nesting 3 arrays
+    #* @return(dic[0]) returns list of titles of the repos
+    #* @return(dic[1]) returns a list of lanauges of the repos (not in parallel with titles)
+    #* @return(dic[2]) returns a list of when the repo was last modified (in parallel with titles)
 def get_repos(user, path):
     home = "https://github.com/" +  user
-    repos = []
+    struct = {}
     titles = []
     langs = []
     dates = []
     url = home + "?tab=" + "repositories"
     file_name = path + fix_url(url)
     if not test_path(file_name):
-        return repos
+        return struct
     html = file_to_html(file_name)
     bfsO = BeautifulSoup(html, "html.parser")
     user_list = bfsO.find("div", {"id": "user-repositories-list"})
@@ -122,12 +126,15 @@ def get_repos(user, path):
     span = user_list.findAll("span", {"itemprop": "programmingLanguage"})
     relt = user_list.findAll("relative-time")
     for x in a:
-        titles.append(x.get("href"))
+        titles.append(x.get("href").replace("/" + user + "/", ""))
     for x in span:
         langs.append(x.text)
     for x in relt:
         dates.append(x.text)
-    return [titles, langs, dates]
+    struct["name"] = titles
+    struct["languages"] = langs
+    struct["last_commit"] = dates
+    return struct
 
 #* @brief: get contribution information from overview
 #* @param(string) user: user's account name
@@ -150,3 +157,20 @@ def get_contributions(user, path):
         d.append(r.get("data-count"))
         data.append(d)
     return data
+
+# def main():
+#     user = "conorosully"
+#     path = "../html/"
+#     counts = get_counts(user, path)
+#     print(counts)
+#     followers = get_friends(user, path, "followers")
+#     print(followers)
+#     following = get_friends(user, path, "following")
+#     print(following)
+#     repos = get_repos(user, path)
+#     print(repos)
+#     con = get_contributions(user, path)
+#     print(con)
+#     print("works")
+
+# main()
