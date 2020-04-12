@@ -24,8 +24,8 @@ def str_to_int(string):
 #* @brief: removes backlashes from a url so that it can be used as a file name
 #* @param(string) url: url of the html that will be saved
 #* @return(string): the url with backslashes substituted
-def fix_path(path):
-    return sys.argv[2] + path.replace("/","%fs%")
+def fix_url(url):
+    return url.replace("/","%fs%")
 
 #* @brief: tests if a file exists
 #* @param(string) url: url of the html that will be saved
@@ -56,11 +56,12 @@ def file_to_html(path):
 #* @brief: returns an int array of the tab counts visible from overvief page
 #* @param url: string leading to a user's overview page; "https://github.com/user_name"
 #* @return counts: returns an array - #repos #projects #stars #followers #following
-def get_counts():
-    home = "https://github.com/" +  sys.argv[1]
-    if not test_path(fix_path(home)):
+def get_counts(user, path):
+    home = "https://github.com/" +  user
+    path += fix_url(home)
+    if not test_path(path):
         return None
-    html = file_to_html(fix_path(home))
+    html = file_to_html(path)
     bfsO = BeautifulSoup(html, "html.parser")
     counts = bfsO.findAll("span", {"class": "Counter"})
     for i in range(len(counts)):
@@ -71,15 +72,16 @@ def get_counts():
 #* @brief: returns a dictionary of all the users a user follows/following
 #* @param tab: which type of user to parse ["following", "followers"]
 #* @return friends: dictionary of all friends
-def get_friends(tab):
-    home = "https://github.com/" +  sys.argv[1]
+def get_friends(user, path, tab):
+    home = "https://github.com/" +  user
     friends = {}
     page = 1
     while 1:
         url = home + "?page=" + str(page) + "&tab=" + tab
-        if not test_path(fix_path(url)):
+        path += fix_url(url)
+        if not test_path(path):
             return friends
-        html = file_to_html(fix_path(url))
+        html = file_to_html(path)
         bfsO = BeautifulSoup(html, "html.parser")
         users = bfsO.findAll("a", {"data-hovercard-type": "user"})
         if not users:
@@ -98,16 +100,17 @@ def get_friends(tab):
     #* @return(array[0]) returns list of titles of the repos
     #* @return(array[1]) returns a list of lanauges of the repos (not in parallel with titles)
     #* @return(array[2]) returns a list of when the repo was last modified (in parallel with titles)
-def get_repos():
-    home = "https://github.com/" +  sys.argv[1]
+def get_repos(user, path):
+    home = "https://github.com/" +  user
     repos = []
     titles = []
     langs = []
     dates = []
     url = home + "?tab=" + "repositories"
-    if not test_path(fix_path(url)):
+    path += fix_url(url)
+    if not test_path(path):
         return repos
-    html = file_to_html(fix_path(url))
+    html = file_to_html(path)
     bfsO = BeautifulSoup(html, "html.parser")
     user_list = bfsO.find("div", {"id": "user-repositories-list"})
     a = user_list.findAll("a")
@@ -123,13 +126,14 @@ def get_repos():
 
 #* @brief: get contribution information from overview
 #* @return(array of arrays): returns [[commits, day]]
-def get_contributions():
-    home = "https://github.com/" +  sys.argv[1]
+def get_contributions(user, path):
+    home = "https://github.com/" +  user
     data = []
     url = home
-    if not test_path(fix_path(url)):
+    path += fix_url(url)
+    if not test_path(path):
         return
-    html = file_to_html(fix_path(url))
+    html = file_to_html(path)
     bfsO = BeautifulSoup(html, "html.parser")
     con = bfsO.find("div", {"class": "js-yearly-contributions"})
     rect = con.findAll("rect")
