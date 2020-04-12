@@ -69,6 +69,10 @@ def save_users(user, path, tab):
                 return
             bfsO = BeautifulSoup(html.text, "html.parser")
             users = bfsO.findAll("a", {"data-hovercard-type": "user"})
+            span = bfsO.findAll("span", {"class": "user-following-container"})
+            #! jankey wa to tell that you've reached the last page of users
+            if len(span) <= 1:
+                return
             if users:
                 html_to_file(file_name, html.text)
             else:
@@ -82,3 +86,11 @@ def save_all(user, path):
     save_users(user, path, "followers")
     save_users(user, path, "following")
     save_other(user, path)
+
+# def main():
+#     user = "conorosully"
+#     path = "../html/"
+#     save_all(user, path)
+#     print("works")
+
+# main()
