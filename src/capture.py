@@ -54,7 +54,8 @@ def file_to_html(path):
 #?#################################################
 
 #* @brief: returns an int array of the tab counts visible from overvief page
-#* @param url: string leading to a user's overview page; "https://github.com/user_name"
+#* @param(string) user: user's account name
+#* @param(string) path: folder path where the html will be saved: "../html/"
 #* @return counts: returns an array - #repos #projects #stars #followers #following
 def get_counts(user, path):
     home = "https://github.com/" +  user
@@ -70,6 +71,8 @@ def get_counts(user, path):
     return counts
 
 #* @brief: returns a dictionary of all the users a user follows/following
+#* @param(string) user: user's account name
+#* @param(string) path: folder path where the html will be saved: "../html/"
 #* @param tab: which type of user to parse ["following", "followers"]
 #* @return friends: dictionary of all friends
 def get_friends(user, path, tab):
@@ -96,6 +99,8 @@ def get_friends(user, path, tab):
     return friends
 
 #* @brief: get repo information from repositiories tab
+#* @param(string) user: user's account name
+#* @param(string) path: folder path where the html will be saved: "../html/"
 #* @return(array): returns an array nesting 3 arrays
     #* @return(array[0]) returns list of titles of the repos
     #* @return(array[1]) returns a list of lanauges of the repos (not in parallel with titles)
@@ -125,6 +130,8 @@ def get_repos(user, path):
     return [titles, langs, dates]
 
 #* @brief: get contribution information from overview
+#* @param(string) user: user's account name
+#* @param(string) path: folder path where the html will be saved: "../html/"
 #* @return(array of arrays): returns [[commits, day]]
 def get_contributions(user, path):
     home = "https://github.com/" +  user

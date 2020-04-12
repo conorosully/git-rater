@@ -13,7 +13,7 @@ def fix_url(url):
     return url.replace("/","%fs%")
 
 #* @brief: tests if a file exists
-#* @param(string) url: url of the html that will be saved
+#* @param(string) path: path to the file
 #* @return(int): 1 if file exists else 0
 def test_path(path):
     try:
@@ -36,7 +36,8 @@ def html_to_file(path, html):
 #?#################################################
 
 #* @brief: saves overview, repos, project and stars of a user (just the 1st page of each)
-#* @param(string) home: url to a user's overview page. "https://github.com/user_name"
+#* @param(string) user: user's account name
+#* @param(string) path: folder path where the html will be saved: "../html/"
 def save_other(user, path):
     tabs = ["", "?tab=repositories", "?tab=projects", "?tab=packages", "?tab=stars"]
     for tab in tabs:
@@ -52,7 +53,8 @@ def save_other(user, path):
         html_to_file(file_name, html.text)
 
 #* @brief: all followers and following of a user, depending on the tab
-#* @param(string) home: url to a user's overview page
+#* @param(string) user: user's account name
+#* @param(string) path: folder path where the html will be saved: "../html/"
 #* @param(string) tab: the user type to save ["followers", "following"]
 def save_users(user, path, tab):
     page = 1
