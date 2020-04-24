@@ -87,10 +87,8 @@ def save_all(user, path):
     save_users(user, path, "following")
     save_other(user, path)
 
-# def main():
-#     user = "conorosully"
-#     path = "../html/"
-#     save_all(user, path)
-#     print("works")
-
-# main()
+if __name__ == "__main__":
+    user = sys.argv[1] # "conorosully"
+    path = sys.argv[2] #"../html/"
+    save_all(user, path)
+    print("works")

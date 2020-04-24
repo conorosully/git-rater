@@ -158,19 +158,35 @@ def get_contributions(user, path):
         data.append(d)
     return data
 
-# def main():
-#     user = "conorosully"
-#     path = "../html/"
-#     counts = get_counts(user, path)
-#     print(counts)
-#     followers = get_friends(user, path, "followers")
-#     print(followers)
-#     following = get_friends(user, path, "following")
-#     print(following)
-#     repos = get_repos(user, path)
-#     print(repos)
-#     con = get_contributions(user, path)
-#     print(con)
-#     print("works")
+def get_orgs(user, path):
+    home = "https://github.com/" +  user
+    orgs = []
+    url = home
+    file_name = path + fix_url(home)
+    if not test_path(file_name):
+        return
+    html = file_to_html(file_name)
+    bfsO = BeautifulSoup(html, "html.parser")
+    atags = bfsO.find("a", {"data-hovercard-type": "organization"})
+    if not atags:
+        return orgs
+    for a in atags:
+        orgs.append(str(a).replace("@", ""))
+    return orgs
 
-# main()
+if __name__ == "__main__":
+    user = sys.argv[1] #"conorosully"
+    path = sys.argv[2] #"../html/"
+    counts = get_counts(user, path)
+    print(counts)
+    followers = get_friends(user, path, "followers")
+    print(followers)
+    following = get_friends(user, path, "following")
+    print(following)
+    repos = get_repos(user, path)
+    print(repos)
+    con = get_contributions(user, path)
+    print(con)
+    orgs = get_orgs(user, path)
+    print(orgs)
+    print("works")
