@@ -3,7 +3,7 @@ from urllib.request import urlopen
 from bs4 import BeautifulSoup
 import requests
 import datetime
-
+ 
 #?#################################################
 #? helper functions
 #?#################################################
@@ -167,11 +167,17 @@ def get_orgs(user, path):
         return
     html = file_to_html(file_name)
     bfsO = BeautifulSoup(html, "html.parser")
-    atags = bfsO.find("a", {"data-hovercard-type": "organization"})
+    atags = bfsO.findAll("a", {"data-hovercard-type": "organization"})
     if not atags:
         return orgs
     for a in atags:
-        orgs.append(str(a).replace("@", ""))
+        try:
+            if (str(a.text)).strip() == "":
+                    href = a.get("href")[1:]
+                    orgs.append(str(href))
+        except:
+            0
+               
     return orgs
 
 if __name__ == "__main__":
