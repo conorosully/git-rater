@@ -13,7 +13,7 @@ A machine learning model that tries to predict the quality of your github profil
   </tr>
   <tr>
     <td>capture.py</td>
-    <td>Collection of functions used to extract specific elements from html (i.e. list of contributions)</td>
+    <td>Collection of functions used to extract specific elements from html and create features</td>
   </tr>
   <tr>
     <td>collect_data.ipynb</td>
@@ -29,7 +29,7 @@ A machine learning model that tries to predict the quality of your github profil
   </tr>
   <tr>
     <td>random_forest.ipynb</td>
-    <td>Build a random forest to predict the ratings of github profiles</td>algorithm.</td>
+    <td>Build a random forest to predict the ratings of github profiles</td>
   </tr>
 </table>
 
